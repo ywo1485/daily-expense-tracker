@@ -3,6 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Track what you spend each day and keep a pet panda fed. Free, no account, and your entries stay in your browser.">
+<meta name="theme-color" content="#FBF3F7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#211B2A" media="(prefers-color-scheme: dark)">
 <title>Daily Spend</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='9' cy='10' r='7' fill='%233D3350'/%3E%3Ccircle cx='31' cy='10' r='7' fill='%233D3350'/%3E%3Ccircle cx='20' cy='22' r='16' fill='%23FFFDF8' stroke='%233D3350' stroke-width='2.5'/%3E%3Cellipse cx='13.5' cy='21' rx='4' ry='5' fill='%233D3350'/%3E%3Cellipse cx='26.5' cy='21' rx='4' ry='5' fill='%233D3350'/%3E%3Cellipse cx='20' cy='27.5' rx='2.4' ry='1.7' fill='%233D3350'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,6 +20,7 @@
   --display:"Fredoka","Nunito",system-ui,sans-serif;
   --body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
   --r:24px;
+  --stick:0 0 0 1px var(--line),0 1px 2px var(--lift),0 6px 12px -4px var(--lift);
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
@@ -57,10 +61,10 @@ header.top h1{font:600 22px/1 var(--display);margin:0;white-space:nowrap}
 .icon-btn{border:2px solid var(--line);background:var(--surface);border-radius:14px;min-width:42px;height:42px;padding:0 12px;font-weight:700}
 
 .panel{background:var(--surface);border:2px solid var(--line);border-radius:var(--r);padding:18px}
-.panel h2{font:600 17px/1.2 var(--display);margin:0 0 12px}
+.panel h2{font:600 19px/1.2 var(--display);margin:0 0 12px}
 
 /* a sticker: pastel fill, white edge, tiny lift */
-.sticker{background:var(--c,var(--accent));color:var(--on-pastel);border:2.5px solid var(--edge);box-shadow:0 2px 0 var(--lift),0 0 0 1px var(--line)}
+.sticker{background:var(--c,var(--accent));color:var(--on-pastel);border:2.5px solid var(--edge);box-shadow:var(--stick)}
 
 /* panda pet: an illustrated window (fixed colours in both themes) over an info strip */
 header.top h1{display:flex;align-items:center;gap:8px}
@@ -74,7 +78,7 @@ header.top h1 svg{width:30px;height:30px;flex:none}
 .bubble{position:absolute;top:14px;left:14px;max-width:calc(100% - 124px);background:#fff;border:2px solid #3D3350;border-radius:18px 18px 6px 18px;padding:9px 13px;font-size:14px;font-weight:700;line-height:1.35}
 .streak{position:absolute;top:12px;right:12px;min-width:78px;padding:8px 10px 7px;border-radius:22px;text-align:center;transform:rotate(5deg);--c:#FFF0B3}
 .streak b{display:block;font:600 34px/1 var(--display)}
-.streak span{font-size:11px;font-weight:800}
+.streak span{font-size:12px;font-weight:800}
 .streak.bounce{animation:bounce .7s cubic-bezier(.2,1.7,.4,1)}
 @keyframes bounce{0%{transform:rotate(5deg) scale(.5)}60%{transform:rotate(-6deg) scale(1.15)}100%{transform:rotate(5deg) scale(1)}}
 .pandabtn{position:absolute;left:50%;bottom:8px;width:190px;height:171px;margin-left:-95px;padding:0;border:0;background:none;border-radius:40%}
@@ -116,15 +120,15 @@ header.top h1 svg{width:30px;height:30px;flex:none}
 .amount:focus-within{border-color:var(--accent-deep)}
 .amount span{font:500 22px/1 var(--display);color:var(--muted)}
 .amount input{flex:1;min-width:0;border:0;background:none;outline:0;font:600 46px/1.1 var(--display);padding:0}
-.amount input::placeholder{color:var(--line)}
-.cats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:16px 0}
-.cats button{border-radius:999px;padding:9px 0;font-size:12px;letter-spacing:-.01em;font-weight:800;min-height:44px;overflow-wrap:anywhere;transition:transform .15s}
+.amount input::placeholder{color:color-mix(in srgb,var(--muted) 80%,var(--surface));opacity:1}
+.cats{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+.cats button{border-radius:999px;padding:0 14px;font-size:13px;font-weight:800;min-height:44px;transition:transform .2s cubic-bezier(.16,1,.3,1)}
 .cats button[aria-pressed="true"]{box-shadow:0 0 0 2.5px var(--ink);transform:rotate(-3deg) scale(1.06)}
 .field{width:100%;border:2px solid var(--line);background:var(--bg);border-radius:14px;padding:11px 14px;font-weight:600}
 .actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
 .btn{border:0;border-radius:999px;padding:13px 12px;white-space:nowrap;font:600 15px/1 var(--display);min-height:48px;transition:transform .08s,box-shadow .08s}
-.btn.primary{background:var(--accent);color:var(--on-pastel);flex:1 1 130px;box-shadow:0 4px 0 var(--accent-deep)}
-.btn.primary:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--accent-deep)}
+.btn.primary{background:var(--accent);color:var(--on-pastel);flex:1 1 130px;box-shadow:0 2px 0 var(--accent-deep),0 10px 16px -8px var(--accent-deep)}
+.btn.primary:active:not(:disabled){transform:translateY(2px);box-shadow:0 0 0 var(--accent-deep),0 4px 8px -6px var(--accent-deep)}
 .btn.ghost{background:var(--surface);border:2px solid var(--line);flex:1 1 130px}
 .btn.danger{background:none;border:2px solid var(--warn);color:var(--warn)}
 .btn:disabled{opacity:.5;cursor:not-allowed}
@@ -138,7 +142,7 @@ header.top h1 svg{width:30px;height:30px;flex:none}
 .day{position:relative;aspect-ratio:1;border-radius:36%;border:2.5px solid transparent;background:none;display:grid;place-items:center;font:500 15px/1 var(--display);font-variant-numeric:tabular-nums;color:var(--muted);padding:0}
 .day.future{opacity:.4;cursor:default}
 .day.back{background:color-mix(in srgb,var(--c) 40%,transparent);color:var(--ink)}
-.day.on{background:var(--c);color:var(--on-pastel);border-color:var(--edge);box-shadow:0 2px 0 var(--lift),0 0 0 1px var(--line);transform:rotate(var(--rot,0deg));font-weight:600}
+.day.on{background:var(--c);color:var(--on-pastel);border-color:var(--edge);box-shadow:var(--stick);transform:rotate(var(--rot,0deg));font-weight:600}
 .day.zero::after{content:"";position:absolute;bottom:12%;width:5px;height:5px;border-radius:50%;border:1.5px solid currentColor}
 .day.today:not(.on){border:2px dashed var(--muted)}
 .day.sel{outline:2.5px solid var(--ink);outline-offset:2px}
@@ -160,12 +164,12 @@ header.top h1 svg{width:30px;height:30px;flex:none}
 .badge{display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center;font-size:12px;font-weight:700;color:var(--muted)}
 .badge .seal{width:50px;height:50px;border-radius:36%;display:grid;place-items:center;border:2px dashed var(--line);font:600 16px/1 var(--display)}
 .badge.got{color:var(--ink)}
-.badge.got .seal{background:var(--c);color:var(--on-pastel);border:2.5px solid var(--edge);box-shadow:0 2px 0 var(--lift),0 0 0 1px var(--line);transform:rotate(var(--rot))}
+.badge.got .seal{background:var(--c);color:var(--on-pastel);border:2.5px solid var(--edge);box-shadow:var(--stick);transform:rotate(var(--rot))}
 
 /* entries */
 .daygroup{border-top:2px dotted var(--line);padding-top:10px;margin-top:10px}
 .dayhead{display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:4px}
-.entry{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;background:none;border:0;padding:7px 0;text-align:left;border-radius:10px}
+.entry{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;background:none;border:0;padding:7px 8px;margin:0 -8px;width:calc(100% + 16px);text-align:left;border-radius:10px}
 .entry .what{min-width:0;overflow-wrap:anywhere;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .pill{background:var(--c);color:var(--on-pastel);border-radius:999px;padding:3px 10px;font-size:13px;font-weight:800;white-space:nowrap}
 .entry .amt{font:500 16px/1 var(--display);font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -183,6 +187,31 @@ textarea.field{min-height:160px;font:13px/1.4 ui-monospace,monospace}
 .toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,20px);background:var(--ink);color:var(--surface);padding:12px 18px;border-radius:999px;font-weight:700;font-size:15px;opacity:0;pointer-events:none;transition:.25s;max-width:calc(100vw - 32px);text-align:center;z-index:10}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 #confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:9}
+/* log form shares the panda's panel: feeding and logging are one act */
+.logform{padding:16px 18px 18px;border-top:2px dotted var(--line)}
+.entries-panel #exportBtn{width:100%;margin-top:18px}
+.foot{text-align:center;font-size:13px;font-weight:600;color:var(--muted);margin:4px 0 0}
+
+/* the parts the browser draws */
+html{scrollbar-color:var(--line) transparent;accent-color:var(--accent-deep)}
+::selection{background:var(--accent);color:var(--on-pastel)}
+input{caret-color:var(--accent-deep)}
+.field::placeholder{color:var(--muted);opacity:1}
+h1,h2,.bubble{text-wrap:balance}
+
+/* hover and disabled states */
+.icon-btn{display:inline-grid;place-items:center}
+.icon-btn:disabled{opacity:.4;cursor:default}
+.icon-btn,.btn,.field,.entry,.day,.link{transition:border-color .15s,background-color .15s,text-decoration-color .15s,transform .08s,box-shadow .08s}
+@media (hover:hover){
+  .btn.primary:hover:not(:disabled){background:color-mix(in srgb,var(--accent) 84%,#fff)}
+  .btn.ghost:hover:not(:disabled),.icon-btn:hover:not(:disabled){border-color:var(--accent-deep)}
+  .btn.danger:hover{background:color-mix(in srgb,var(--warn) 12%,transparent)}
+  .cats button:hover:not([aria-pressed="true"]){transform:translateY(-2px)}
+  .day:not(:disabled):hover{border-color:var(--accent-deep)}
+  .entry:hover{background:var(--bg)}
+  .link:hover{text-decoration-color:var(--ink)}
+}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -198,9 +227,9 @@ textarea.field{min-height:160px;font:13px/1.4 ui-monospace,monospace}
 
   <div class="cols">
     <div class="col">
-      <section class="panel pet" aria-label="Your panda" id="pet"></section>
+      <section class="panel pet" aria-label="Your panda and today's log"><div id="pet"></div>
 
-      <section class="panel" aria-label="Log an expense">
+      <div class="logform">
         <form id="addForm" novalidate>
           <div class="when"><span id="whenLabel"></span><button type="button" class="link" id="backToday" hidden>Back to today</button></div>
           <label class="amount" for="amount"><span>RM</span>
@@ -214,17 +243,17 @@ textarea.field{min-height:160px;font:13px/1.4 ui-monospace,monospace}
           </div>
           <div class="msg" id="formMsg" role="alert"></div>
         </form>
-      </section>
+      </div></section>
 
-      <section class="panel entries-panel" aria-label="Entries"><div id="entries"></div></section>
+      <section class="panel entries-panel" aria-label="Entries"><div id="entries"></div><button class="btn ghost" id="exportBtn" type="button" hidden></button><div id="exportOut"></div></section>
     </div>
 
     <div class="col">
       <section class="panel" aria-label="Month">
         <div class="monthnav">
-          <button class="icon-btn" id="prevM" type="button" aria-label="Previous month">&lsaquo;</button>
+          <button class="icon-btn" id="prevM" type="button" aria-label="Previous month"><svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg></button>
           <strong id="monthLabel"></strong>
-          <button class="icon-btn" id="nextM" type="button" aria-label="Next month">&rsaquo;</button>
+          <button class="icon-btn" id="nextM" type="button" aria-label="Next month"><svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></button>
         </div>
         <div class="cal" id="cal"></div>
         <div class="legend">
@@ -238,13 +267,9 @@ textarea.field{min-height:160px;font:13px/1.4 ui-monospace,monospace}
       <section class="panel" aria-label="Budget"><div id="budget"></div></section>
       <section class="panel" aria-label="Level and badges"><div id="level"></div></section>
 
-      <section class="panel" aria-label="Export">
-        <h2>Monthly export</h2>
-        <button class="btn ghost" id="exportBtn" type="button" style="width:100%"></button>
-        <div id="exportOut"></div>
-      </section>
     </div>
   </div>
+  <footer class="foot">Your entries are saved in this browser only. Nothing is uploaded.</footer>
 </div>
 
 <dialog id="editDlg">
@@ -405,7 +430,9 @@ if (typeof module !== 'undefined') module.exports = Core;
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const money = c => (c < 0 ? '-' : '') + 'RM ' + (Math.abs(c) / 100).toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const clone = o => JSON.parse(JSON.stringify(o));
-  const DEFAULT_CATS = ['Subscription', 'Gift', 'Health', 'Transportation', 'Skincare', 'Personal', 'Food', 'Insurance', 'Kpop', 'Entertainment', 'Other'].map((name, i) => ({ id: 'k' + i, name }));
+  // ids are stable (entries store them); the array order is the display order, most common first
+  const CAT_NAMES = ['Subscriptions', 'Gifts', 'Health', 'Transport', 'Shopping', 'Personal', 'Food', 'Bills', 'Groceries', 'Entertainment', 'Other'];
+  const DEFAULT_CATS = [6, 8, 3, 7, 4, 2, 9, 0, 1, 5, 10].map(i => ({ id: 'k' + i, name: CAT_NAMES[i] }));
   const LEGACY = { c0: 'k6', c1: 'k3', c5: 'k9', c6: 'k2' };   // ids from the first category set
   const PASTELS = ['#D9C8F5', '#FFC8DD', '#BFEBD0', '#BDE0FE', '#FFD6BA', '#FFF0B3', '#F9BCC8', '#C9D1FA', '#F3C4F0', '#BEEDEA', '#E4DEEA'];
   const catColor = id => { const i = S.settings.cats.findIndex(c => c.id === normCat(id)); return PASTELS[(i < 0 ? 10 : i) % PASTELS.length]; };
@@ -523,14 +550,14 @@ if (typeof module !== 'undefined') module.exports = Core;
   function addEntry(date, amount, cat, note) {
     const mk = date.slice(0, 7), m = month(mk);
     const g = gains(() => { m.entries.push({ id: uid8(), date, amount, cat, note, ts: Date.now() }); m.noSpend = m.noSpend.filter(n => n.date !== date); });
-    popDate = date; persist('m-' + mk); feed(date); render(); confetti();
+    popDate = date; persist('m-' + mk); feed(date); render(); if (g.up) confetti();
     toast(g.up ? `Level ${g.up.level}: ${g.up.title}. Logged ${money(amount)}.` : `Logged ${money(amount)} for ${catName(cat)}. +${g.pts} points`);
   }
   function addNoSpend(date) {
     const mk = date.slice(0, 7), m = month(mk);
     if (m.noSpend.some(n => n.date === date) || m.entries.some(e => e.date === date)) return;
     const g = gains(() => m.noSpend.push({ date, ts: Date.now() }));
-    popDate = date; persist('m-' + mk); feed(date); render(); confetti();
+    popDate = date; persist('m-' + mk); feed(date); render(); if (g.up) confetti();
     toast(g.up ? `Level ${g.up.level}: ${g.up.title}. No-spend day logged.` : `No-spend day logged. +${g.pts} points`);
   }
   function findEntry(id) { for (const mk in S.months) { const e = S.months[mk].entries.find(x => x.id === id); if (e) return { mk, e }; } return null; }
@@ -539,7 +566,8 @@ if (typeof module !== 'undefined') module.exports = Core;
   function render() {
     const t = today(), map = Core.dayMap(S.months);
     renderSync(); renderPet(map, t); renderForm(map, t); renderCal(map, t); renderBudget(t); renderLevel(map, t); renderEntries();
-    $('exportBtn').textContent = `Export ${MONTHS[+viewMonth.slice(5) - 1]} as CSV`;
+    $('exportBtn').hidden = !((S.months[viewMonth] || {}).entries || []).length;
+    $('exportBtn').textContent =`Export ${MONTHS[+viewMonth.slice(5) - 1]} as CSV`;
     popDate = null;
   }
   function renderSync() {
