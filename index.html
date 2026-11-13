@@ -10,41 +10,43 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='9' cy='10' r='7' fill='%233D3350'/%3E%3Ccircle cx='31' cy='10' r='7' fill='%233D3350'/%3E%3Ccircle cx='20' cy='22' r='16' fill='%23FFFDF8' stroke='%233D3350' stroke-width='2.5'/%3E%3Cellipse cx='13.5' cy='21' rx='4' ry='5' fill='%233D3350'/%3E%3Cellipse cx='26.5' cy='21' rx='4' ry='5' fill='%233D3350'/%3E%3Cellipse cx='20' cy='27.5' rx='2.4' ry='1.7' fill='%233D3350'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;900&display=swap" rel="stylesheet">
 <style>
-/* Layout idea: a sticker sheet. Dotted backing page, white rounded panels, and every logged thing (category, calendar day, badge) is a pastel sticker with a white edge. */
+/* A loyalty stamp card: white cards outlined in plum ink on a blush ground. Every day logged is a pastel rubber stamp. */
 :root{
-  --bg:#FBF3F7; --dot:#F1E2EC; --surface:#FFFFFF; --ink:#3D3350; --muted:#756A85; --line:#EBDFEA;
-  --accent:#CDB7F6; --accent-deep:#A98BE0; --mint:#BFEBD0; --warn:#B8405F;
-  --on-pastel:#3D3350; --edge:#FFFFFF; --lift:rgba(61,51,80,.16);
-  --display:"Fredoka","Nunito",system-ui,sans-serif;
-  --body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --r:24px;
-  --stick:0 0 0 1px var(--line),0 1px 2px var(--lift),0 6px 12px -4px var(--lift);
+  --bg:#FBF3F7; --surface:#FFFFFF; --ink:#3D3350; --muted:#6F6480; --line:#E6DAE6; --rule:#3D3350;
+  --accent:#CDB7F6; --accent-deep:#8E6FD0; --mint:#BFEBD0; --warn:#B8405F; --on-pastel:#3D3350;
+  --display:"Rubik",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r:14px;
+  --out:cubic-bezier(.16,1,.3,1);
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --bg:#211B2A; --dot:#2B2436; --surface:#2B2437; --ink:#F3ECF8; --muted:#B0A5BF; --line:#43394F;
-    --accent:#CDB7F6; --accent-deep:#8E72C4; --mint:#BFEBD0; --warn:#FF9DB5;
-    --edge:#F8F2FB; --lift:rgba(0,0,0,.35);
+    --bg:#211B2A; --surface:#2B2437; --ink:#F3ECF8; --muted:#B0A5BF; --line:#43394F; --rule:#9A8FAE;
+    --accent-deep:#B79CF0; --warn:#FF9DB5;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#211B2A; --dot:#2B2436; --surface:#2B2437; --ink:#F3ECF8; --muted:#B0A5BF; --line:#43394F;
-  --accent:#CDB7F6; --accent-deep:#8E72C4; --mint:#BFEBD0; --warn:#FF9DB5;
-  --edge:#F8F2FB; --lift:rgba(0,0,0,.35);
+  --bg:#211B2A; --surface:#2B2437; --ink:#F3ECF8; --muted:#B0A5BF; --line:#43394F; --rule:#9A8FAE;
+  --accent-deep:#B79CF0; --warn:#FF9DB5;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
 html,body{margin:0}
-body{background:var(--bg) radial-gradient(var(--dot) 1.5px,transparent 1.6px) 0 0/18px 18px;color:var(--ink);font:500 16px/1.45 var(--body);-webkit-font-smoothing:antialiased}
+html{scrollbar-color:var(--muted) transparent;accent-color:var(--accent-deep)}
+body{background:var(--bg);color:var(--ink);font:500 16px/1.4 var(--display);-webkit-font-smoothing:antialiased}
 button,input,select{font:inherit;color:inherit}
 button{cursor:pointer}
-:focus-visible{outline:2.5px solid var(--accent-deep);outline-offset:2px}
-.num{font-family:var(--display);font-variant-numeric:tabular-nums}
+:focus-visible{outline:3px solid var(--accent-deep);outline-offset:2px}
+::selection{background:var(--accent);color:var(--on-pastel)}
+input{caret-color:var(--accent-deep)}
+h1,h2,.bubble{text-wrap:balance}
+.num{font-variant-numeric:tabular-nums}
 .muted{color:var(--muted)}
-.wrap{max-width:520px;margin:0 auto;padding:16px 16px 56px;display:flex;flex-direction:column;gap:16px}
+
+/* page */
+.wrap{max-width:520px;margin:0 auto;padding:16px 16px 48px;display:flex;flex-direction:column;gap:16px}
 .cols{display:flex;flex-direction:column;gap:16px}
 .col{display:flex;flex-direction:column;gap:16px;min-width:0}
 @media (max-width:899px){.col{display:contents}.entries-panel{order:9}}
@@ -53,35 +55,35 @@ button{cursor:pointer}
   .cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start;gap:24px}
 }
 header.top{display:flex;justify-content:space-between;align-items:center;gap:12px}
-header.top h1{font:600 22px/1 var(--display);margin:0;white-space:nowrap}
-.sync{display:flex;align-items:center;gap:6px;white-space:nowrap;font-size:12px;color:var(--muted);font-weight:600}
-.sync i{width:9px;height:9px;border-radius:50%;background:var(--muted)}
-.sync.ok i{background:#7FD3A2}
+header.top h1{font:900 22px/1 var(--display);margin:0;display:flex;align-items:center;gap:8px;white-space:nowrap}
+header.top h1 svg{width:34px;height:34px;flex:none}
+.sync{display:flex;align-items:center;gap:6px;white-space:nowrap;font-size:12px;font-weight:700;color:var(--muted)}
+.sync i{width:10px;height:10px;border-radius:50%;background:var(--muted);border:1.5px solid var(--rule)}
+.sync.ok i{background:var(--mint)}
 .sync.bad i{background:var(--warn)}
-.icon-btn{border:2px solid var(--line);background:var(--surface);border-radius:14px;min-width:42px;height:42px;padding:0 12px;font-weight:700}
+@media (max-width:460px){.sync span{display:none}.petart{width:100px;height:90px}}
+.icon-btn{display:inline-grid;place-items:center;border:2px solid var(--rule);background:var(--surface);border-radius:999px;min-width:44px;height:44px;padding:0 14px;font-weight:700;font-size:14px}
+.icon-btn:disabled{opacity:.35;cursor:default}
+.panel{background:var(--surface);border:2px solid var(--rule);border-radius:var(--r);padding:16px}
+.panel h2{font:900 18px/1.2 var(--display);margin:0 0 10px}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.foot{text-align:center;font-size:13px;color:var(--muted);margin:4px 0 0}
 
-.panel{background:var(--surface);border:2px solid var(--line);border-radius:var(--r);padding:18px}
-.panel h2{font:600 19px/1.2 var(--display);margin:0 0 12px}
-
-/* a sticker: pastel fill, white edge, tiny lift */
-.sticker{background:var(--c,var(--accent));color:var(--on-pastel);border:2.5px solid var(--edge);box-shadow:var(--stick)}
-
-/* panda pet: an illustrated window (fixed colours in both themes) over an info strip */
-header.top h1{display:flex;align-items:center;gap:8px}
-header.top h1 svg{width:30px;height:30px;flex:none}
-.pet{padding:0;overflow:hidden}
-.scene{position:relative;height:270px;overflow:hidden;color:#3D3350;background:linear-gradient(#DCEFFB 0,#EEF8EE 64%,#C9E9CD 64%,#B9E0BF 100%)}
-.scene .boo{position:absolute;bottom:26px;width:54px;height:210px}
-.scene .boo svg{width:100%;height:100%;display:block}
-.scene .boo.l{left:-4px}
-.scene .boo.r{right:-4px;transform:scaleX(-1)}
-.bubble{position:absolute;top:14px;left:14px;max-width:calc(100% - 124px);background:#fff;border:2px solid #3D3350;border-radius:18px 18px 6px 18px;padding:9px 13px;font-size:14px;font-weight:700;line-height:1.35}
-.streak{position:absolute;top:12px;right:12px;min-width:78px;padding:8px 10px 7px;border-radius:22px;text-align:center;transform:rotate(5deg);--c:#FFF0B3}
-.streak b{display:block;font:600 34px/1 var(--display)}
-.streak span{font-size:12px;font-weight:800}
-.streak.bounce{animation:bounce .7s cubic-bezier(.2,1.7,.4,1)}
-@keyframes bounce{0%{transform:rotate(5deg) scale(.5)}60%{transform:rotate(-6deg) scale(1.15)}100%{transform:rotate(5deg) scale(1)}}
-.pandabtn{position:absolute;left:50%;bottom:8px;width:190px;height:171px;margin-left:-95px;padding:0;border:0;background:none;border-radius:40%}
+/* panda */
+.petrow{display:flex;gap:12px;align-items:flex-start}
+.pettext{flex:1;min-width:0}
+.pettext .row{justify-content:flex-start;align-items:center;gap:8px}
+.pettext h2{margin:0}
+.state{font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;border:1.5px dashed var(--rule);white-space:nowrap}
+.state.done{border-style:solid;background:var(--mint);color:var(--on-pastel)}
+.bubble{margin:6px 0 10px;font-weight:700;font-size:15px;line-height:1.3}
+.tummy{display:flex;gap:6px;margin-bottom:6px}
+.tummy i{width:18px;height:18px;border-radius:50%;border:1.5px dashed var(--muted)}
+.tummy i.on{background:var(--mint);border:1.5px solid var(--rule)}
+.petcap{font-size:13px}
+.petart{position:relative;flex:none;width:118px;height:106px}
+.petart::before{content:"";position:absolute;inset:4px 8px 0;border-radius:50%;background:#D9F1DF}
+.pandabtn{position:relative;width:100%;height:100%;padding:0;border:0;background:none;border-radius:40%}
 .panda{width:100%;height:100%;display:block;overflow:visible;transform-origin:50% 100%;animation:breathe 3.4s ease-in-out infinite}
 .panda.asleep{animation-duration:5.5s}
 .panda.wiggle{animation:wiggle .6s ease-in-out}
@@ -95,121 +97,109 @@ header.top h1 svg{width:30px;height:30px;flex:none}
 .eating .panda .hearts path{transform-box:fill-box;transform-origin:center;animation:heart 1.5s ease-out both}
 .eating .panda .hearts path:nth-child(2){animation-delay:.25s}
 .eating .panda .hearts path:nth-child(3){animation-delay:.5s}
-@keyframes chomp{50%{transform:translateY(3px) scale(1.03,.96)}}
+@keyframes chomp{50%{transform:translateY(2px) scale(1.03,.96)}}
 @keyframes munch{from{transform:scaleY(.25)}to{transform:scaleY(1.1)}}
 @keyframes heart{0%{opacity:0;transform:translateY(8px) scale(.4)}30%{opacity:1}100%{opacity:0;transform:translateY(-26px) scale(1.1)}}
 .zz text{animation:zz 2.6s ease-in-out infinite}
 .zz text:nth-child(2){animation-delay:.9s}
 @keyframes zz{0%,100%{opacity:.25}50%{opacity:1}}
-.snack{display:none;position:absolute;left:50%;bottom:66px;width:12px;height:46px;margin-left:-6px;border-radius:6px;background:#8FCF9B;border:2px solid #3D3350}
-.eating .snack{display:block;animation:snack .7s cubic-bezier(.3,.8,.4,1) both}
-@keyframes snack{0%{transform:translate(120px,-150px) rotate(-200deg)}80%{transform:none;opacity:1}100%{transform:scale(.3);opacity:0}}
-.petinfo{padding:14px 18px 16px}
-.petinfo .row{align-items:center}
-.petinfo h2{margin:0;font-size:20px}
-.state{font-size:13px;font-weight:800;padding:5px 12px;border-radius:999px;border:2px dashed var(--line);color:var(--muted);white-space:nowrap}
-.state.done{border:2px solid transparent;background:var(--mint);color:var(--on-pastel)}
-.tummy{display:flex;gap:6px;margin:12px 0 8px}
-.tummy i{flex:1;height:14px;border-radius:99px;border:2px dashed var(--line)}
-.tummy i.on{background:#9AD8A6;border:2px solid var(--edge);box-shadow:0 0 0 1px var(--line)}
+.snack{display:none;position:absolute;left:50%;bottom:38px;width:8px;height:30px;margin-left:-4px;border-radius:4px;background:#8FCF9B;border:1.5px solid #3D3350}
+.eating .snack{display:block;animation:snack .7s var(--out) both}
+@keyframes snack{0%{transform:translate(50px,-80px) rotate(-200deg)}80%{transform:none;opacity:1}100%{transform:scale(.3);opacity:0}}
 
-/* add form */
-.when{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:14px;font-weight:700;margin-bottom:8px}
-.link{background:none;border:0;padding:0;color:var(--ink);font-weight:800;text-decoration:underline;text-decoration-color:var(--accent-deep);text-decoration-thickness:2px;text-underline-offset:3px}
-.amount{display:flex;align-items:baseline;gap:8px;border-bottom:3px dotted var(--line);padding:4px 0 8px}
+/* log form */
+.logform{margin-top:14px;padding-top:14px;border-top:2px dashed var(--line)}
+.when{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;font-weight:700;margin-bottom:2px}
+.link{background:none;border:0;padding:0;color:var(--ink);font-weight:700;text-decoration:underline;text-decoration-color:var(--accent-deep);text-decoration-thickness:2px;text-underline-offset:3px}
+.amount{display:flex;align-items:baseline;gap:8px;padding-bottom:4px;border-bottom:2px solid var(--rule)}
 .amount:focus-within{border-color:var(--accent-deep)}
-.amount span{font:500 22px/1 var(--display);color:var(--muted)}
-.amount input{flex:1;min-width:0;border:0;background:none;outline:0;font:600 46px/1.1 var(--display);padding:0}
+.amount span{font:700 24px/1 var(--display)}
+.amount input{flex:1;min-width:0;border:0;background:none;outline:0;padding:0;font:900 clamp(56px,19vw,76px)/1.05 var(--display);letter-spacing:-.03em}
 .amount input::placeholder{color:color-mix(in srgb,var(--muted) 80%,var(--surface));opacity:1}
-.cats{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
-.cats button{border-radius:999px;padding:0 14px;font-size:13px;font-weight:800;min-height:44px;transition:transform .2s cubic-bezier(.16,1,.3,1)}
-.cats button[aria-pressed="true"]{box-shadow:0 0 0 2.5px var(--ink);transform:rotate(-3deg) scale(1.06)}
-.field{width:100%;border:2px solid var(--line);background:var(--bg);border-radius:14px;padding:11px 14px;font-weight:600}
+.cats{display:flex;flex-wrap:wrap;gap:7px;margin:14px 0}
+.cats button{display:inline-flex;align-items:center;gap:7px;min-height:44px;padding:0 13px;border-radius:999px;border:2px solid var(--rule);background:var(--surface);color:var(--ink);font-weight:700;font-size:14px;transition:transform .2s var(--out),background-color .15s}
+.cats button::before{content:"";width:11px;height:11px;border-radius:50%;background:var(--c);border:1.5px solid var(--rule)}
+.cats button[aria-pressed="true"]{background:var(--c);color:var(--on-pastel);transform:rotate(-3deg)}
+.cats button[aria-pressed="true"]::before{background:var(--on-pastel);border-color:var(--on-pastel)}
+.cats .more{order:1;border-style:dashed}
+.cats .more::before{display:none}
+.field{width:100%;border:2px solid var(--rule);background:var(--surface);border-radius:12px;padding:11px 14px}
+.field::placeholder{color:var(--muted);opacity:1}
 .actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
-.btn{border:0;border-radius:999px;padding:13px 12px;white-space:nowrap;font:600 15px/1 var(--display);min-height:48px;transition:transform .08s,box-shadow .08s}
-.btn.primary{background:var(--accent);color:var(--on-pastel);flex:1 1 130px;box-shadow:0 2px 0 var(--accent-deep),0 10px 16px -8px var(--accent-deep)}
-.btn.primary:active:not(:disabled){transform:translateY(2px);box-shadow:0 0 0 var(--accent-deep),0 4px 8px -6px var(--accent-deep)}
-.btn.ghost{background:var(--surface);border:2px solid var(--line);flex:1 1 130px}
-.btn.danger{background:none;border:2px solid var(--warn);color:var(--warn)}
-.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn{border:2px solid var(--rule);border-radius:999px;padding:0 16px;min-height:50px;background:var(--surface);color:var(--ink);font:700 15px/1 var(--display);white-space:nowrap}
+.btn.primary{background:var(--accent);color:var(--on-pastel);flex:1 1 150px;font-weight:900;font-size:17px}
+.btn.primary:active:not(:disabled){transform:translateY(2px)}
+.btn.ghost{flex:1 1 130px}
+.btn.danger{border-color:var(--warn);color:var(--warn)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
 .msg{min-height:20px;font-size:14px;font-weight:700;margin-top:10px;color:var(--warn)}
 
-/* calendar */
+/* the stamp card */
 .monthnav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}
-.monthnav strong{font:600 20px/1 var(--display)}
-.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px}
-.cal .wd{font-size:12px;font-weight:700;color:var(--muted);text-align:center;padding-bottom:2px}
-.day{position:relative;aspect-ratio:1;border-radius:36%;border:2.5px solid transparent;background:none;display:grid;place-items:center;font:500 15px/1 var(--display);font-variant-numeric:tabular-nums;color:var(--muted);padding:0}
-.day.future{opacity:.4;cursor:default}
-.day.back{background:color-mix(in srgb,var(--c) 40%,transparent);color:var(--ink)}
-.day.on{background:var(--c);color:var(--on-pastel);border-color:var(--edge);box-shadow:var(--stick);transform:rotate(var(--rot,0deg));font-weight:600}
-.day.zero::after{content:"";position:absolute;bottom:12%;width:5px;height:5px;border-radius:50%;border:1.5px solid currentColor}
-.day.today:not(.on){border:2px dashed var(--muted)}
-.day.sel{outline:2.5px solid var(--ink);outline-offset:2px}
-.day.pop{animation:pop .6s cubic-bezier(.2,1.7,.4,1)}
-@keyframes pop{0%{transform:scale(.2) rotate(-30deg)}100%{transform:scale(1) rotate(var(--rot,0deg))}}
+.monthnav strong{font:900 20px/1 var(--display)}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+.cal .wd{font-size:12px;font-weight:700;color:var(--muted);text-align:center}
+.day{position:relative;aspect-ratio:1;border-radius:50%;border:2px dashed var(--muted);background:none;display:grid;place-items:center;padding:0;font:700 14px/1 var(--display);font-variant-numeric:tabular-nums;color:var(--muted)}
+.day.future{border-style:solid;opacity:.28;cursor:default}
+.day.back{border-color:var(--rule);background:color-mix(in srgb,var(--c) 45%,transparent);color:var(--ink)}
+.day.on{border:2px solid var(--rule);background:var(--c);color:var(--on-pastel);transform:rotate(var(--rot,0deg));box-shadow:inset 0 0 0 2.5px var(--c),inset 0 0 0 4px color-mix(in srgb,var(--on-pastel) 45%,transparent)}
+.day.zero::after{content:"";position:absolute;bottom:4px;width:4px;height:4px;border-radius:50%;background:currentColor}
+.day.today:not(.on){border:3px solid var(--accent-deep);color:var(--ink)}
+.day.sel{outline:3px solid var(--ink);outline-offset:2px}
+.day.pop{animation:thump .55s var(--out)}
+@keyframes thump{0%{transform:scale(2.3) rotate(-24deg);opacity:0}55%{transform:scale(.9) rotate(var(--rot,0deg));opacity:1}100%{transform:scale(1) rotate(var(--rot,0deg))}}
 .legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;font-weight:700;color:var(--muted);margin-top:14px}
 .legend span{display:flex;align-items:center;gap:5px}
-.legend i{width:12px;height:12px;border-radius:36%;display:inline-block}
+.legend i{width:13px;height:13px;border-radius:50%;border:1.5px solid var(--rule)}
+.legend i.on{background:#FFC8DD}
+.legend i.late{border-style:dashed;background:color-mix(in srgb,#FFC8DD 45%,transparent)}
+.legend i.none{width:6px;height:6px;border:0;background:var(--muted)}
 .cap{margin-top:10px;font-size:14px}
 
-/* budget + level */
-.bar{height:12px;border-radius:99px;background:var(--bg);border:2px solid var(--line);overflow:hidden;margin:10px 0 8px}
-.bar b{display:block;height:100%;background:var(--c,var(--mint));border-radius:99px;transition:width .4s}
+/* budget, level, badges */
+.bar{height:14px;border-radius:99px;background:var(--surface);border:2px solid var(--rule);overflow:hidden;margin:10px 0 8px}
+.bar b{display:block;height:100%;background:var(--c,var(--mint));transition:width .4s var(--out)}
 .bar.over b{background:var(--warn)}
-.row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
-.figure{font:600 30px/1.1 var(--display)}
+.figure{font:900 34px/1.1 var(--display);letter-spacing:-.02em}
 .over-t{color:var(--warn)}
 .badges{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px 8px;margin-top:18px}
 .badge{display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center;font-size:12px;font-weight:700;color:var(--muted)}
-.badge .seal{width:50px;height:50px;border-radius:36%;display:grid;place-items:center;border:2px dashed var(--line);font:600 16px/1 var(--display)}
+.badge .seal{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;border:2px dashed var(--muted);font:900 16px/1 var(--display)}
 .badge.got{color:var(--ink)}
-.badge.got .seal{background:var(--c);color:var(--on-pastel);border:2.5px solid var(--edge);box-shadow:var(--stick);transform:rotate(var(--rot))}
+.badge.got .seal{border:2px solid var(--rule);background:var(--c);color:var(--on-pastel);transform:rotate(var(--rot));box-shadow:inset 0 0 0 2.5px var(--c),inset 0 0 0 4px color-mix(in srgb,var(--on-pastel) 45%,transparent)}
 
 /* entries */
-.daygroup{border-top:2px dotted var(--line);padding-top:10px;margin-top:10px}
+.daygroup{border-top:2px dashed var(--line);padding-top:10px;margin-top:10px}
 .dayhead{display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:4px}
-.entry{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;background:none;border:0;padding:7px 8px;margin:0 -8px;width:calc(100% + 16px);text-align:left;border-radius:10px}
+.entry{display:flex;justify-content:space-between;align-items:center;gap:12px;width:calc(100% + 16px);margin:0 -8px;padding:7px 8px;background:none;border:0;text-align:left;border-radius:10px}
 .entry .what{min-width:0;overflow-wrap:anywhere;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.pill{background:var(--c);color:var(--on-pastel);border-radius:999px;padding:3px 10px;font-size:13px;font-weight:800;white-space:nowrap}
-.entry .amt{font:500 16px/1 var(--display);font-variant-numeric:tabular-nums;white-space:nowrap}
-.catrow{display:grid;grid-template-columns:104px 1fr auto;gap:10px;align-items:center;font-size:14px;font-weight:600;margin-top:6px}
+.pill{background:var(--c);color:var(--on-pastel);border:1.5px solid var(--rule);border-radius:999px;padding:2px 10px;font-size:13px;font-weight:700;white-space:nowrap}
+.entry .amt{font:700 16px/1 var(--display);font-variant-numeric:tabular-nums;white-space:nowrap}
+.catrow{display:grid;grid-template-columns:104px 1fr auto;gap:10px;align-items:center;font-size:14px;margin-top:6px}
 .catrow .bar{margin:0}
 .empty{color:var(--muted);font-size:15px;margin:0}
+.entries-panel #exportBtn{width:100%;margin-top:18px}
 
-dialog{border:2px solid var(--line);border-radius:var(--r);background:var(--surface);color:var(--ink);padding:20px;width:min(440px,calc(100vw - 32px));max-height:calc(100% - 32px)}
+/* dialogs, toast */
+dialog{border:2px solid var(--rule);border-radius:var(--r);background:var(--surface);color:var(--ink);padding:20px;width:min(440px,calc(100vw - 32px));max-height:calc(100% - 32px)}
 dialog::backdrop{background:rgba(61,51,80,.45)}
-dialog h2{font:600 22px/1.2 var(--display);margin:0 0 14px}
+dialog h2{font:900 22px/1.2 var(--display);margin:0 0 14px}
 dialog label{display:block;font-size:13px;font-weight:700;color:var(--muted);margin:12px 0 4px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 textarea.field{min-height:160px;font:13px/1.4 ui-monospace,monospace}
-
-.toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,20px);background:var(--ink);color:var(--surface);padding:12px 18px;border-radius:999px;font-weight:700;font-size:15px;opacity:0;pointer-events:none;transition:.25s;max-width:calc(100vw - 32px);text-align:center;z-index:10}
+.toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,20px);background:var(--ink);color:var(--surface);padding:12px 18px;border-radius:999px;font-weight:700;font-size:15px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s var(--out);max-width:calc(100vw - 32px);text-align:center;z-index:10}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 #confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:9}
-/* log form shares the panda's panel: feeding and logging are one act */
-.logform{padding:16px 18px 18px;border-top:2px dotted var(--line)}
-.entries-panel #exportBtn{width:100%;margin-top:18px}
-.foot{text-align:center;font-size:13px;font-weight:600;color:var(--muted);margin:4px 0 0}
 
-/* the parts the browser draws */
-html{scrollbar-color:var(--line) transparent;accent-color:var(--accent-deep)}
-::selection{background:var(--accent);color:var(--on-pastel)}
-input{caret-color:var(--accent-deep)}
-.field::placeholder{color:var(--muted);opacity:1}
-h1,h2,.bubble{text-wrap:balance}
-
-/* hover and disabled states */
-.icon-btn{display:inline-grid;place-items:center}
-.icon-btn:disabled{opacity:.4;cursor:default}
-.icon-btn,.btn,.field,.entry,.day,.link{transition:border-color .15s,background-color .15s,text-decoration-color .15s,transform .08s,box-shadow .08s}
+/* hover */
+.icon-btn,.btn,.field,.entry,.day,.link{transition:border-color .15s,background-color .15s,text-decoration-color .15s,transform .1s}
 @media (hover:hover){
-  .btn.primary:hover:not(:disabled){background:color-mix(in srgb,var(--accent) 84%,#fff)}
-  .btn.ghost:hover:not(:disabled),.icon-btn:hover:not(:disabled){border-color:var(--accent-deep)}
+  .btn.primary:hover:not(:disabled){background:color-mix(in srgb,var(--accent) 80%,#fff)}
+  .btn.ghost:hover:not(:disabled),.icon-btn:hover:not(:disabled){background:color-mix(in srgb,var(--accent) 28%,var(--surface))}
   .btn.danger:hover{background:color-mix(in srgb,var(--warn) 12%,transparent)}
-  .cats button:hover:not([aria-pressed="true"]){transform:translateY(-2px)}
-  .day:not(:disabled):hover{border-color:var(--accent-deep)}
-  .entry:hover{background:var(--bg)}
+  .cats button:hover:not([aria-pressed="true"]){background:color-mix(in srgb,var(--c) 40%,var(--surface))}
+  .day:not(:disabled):not(.on):hover{background:color-mix(in srgb,var(--accent) 28%,transparent)}
+  .entry:hover{background:color-mix(in srgb,var(--accent) 18%,transparent)}
   .link:hover{text-decoration-color:var(--ink)}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -257,9 +247,9 @@ h1,h2,.bubble{text-wrap:balance}
         </div>
         <div class="cal" id="cal"></div>
         <div class="legend">
-          <span><i style="background:#FFC8DD;box-shadow:0 0 0 1px var(--line)"></i>Logged that day</span>
-          <span><i style="background:color-mix(in srgb,#FFC8DD 40%,transparent)"></i>Filled in later</span>
-          <span><i style="border:1.5px solid var(--muted);width:7px;height:7px;border-radius:50%"></i>No spend</span>
+          <span><i class="on"></i>Stamped on the day</span>
+          <span><i class="late"></i>Filled in later</span>
+          <span><i class="none"></i>No spend</span>
         </div>
         <div class="cap" id="calCap"></div>
       </section>
@@ -456,7 +446,7 @@ if (typeof module !== 'undefined') module.exports = Core;
   const normCat = id => S.settings.cats.some(c => c.id === id) ? id : (LEGACY[id] || 'k10');
   const catName = id => (S.settings.cats.find(c => c.id === normCat(id)) || { name: 'Other' }).name;
   const petName = () => S.settings.petName || 'Mochi';
-  let eatUntil = 0, taps = 0;
+  let eatUntil = 0, taps = 0, moreCats = false;
   function feed(date) { if (date !== today()) return; eatUntil = Date.now() + 1900; setTimeout(render, 1950); }
   const docData = id => id === 'settings' ? S.settings : S.months[id.slice(2)];
 
@@ -578,7 +568,6 @@ if (typeof module !== 'undefined') module.exports = Core;
     el.className = 'sync ' + cls; el.lastElementChild.textContent = txt;
     el.title = mode === 'local' ? 'Your entries are stored in this browser only. Export a CSV to keep a backup.' : '';
   }
-  const BOO = `<svg viewBox="0 0 54 210" aria-hidden="true"><g stroke="#3D3350" stroke-width="2" stroke-linejoin="round"><rect x="20" y="6" width="13" height="64" rx="6" fill="#A8DDB2"/><rect x="20" y="72" width="13" height="66" rx="6" fill="#9AD8A6"/><rect x="20" y="140" width="13" height="68" rx="6" fill="#8FCF9B"/><path d="M33 60q16-10 20 2q-12 6-20-2zM33 128q14-12 20-1q-11 7-20 1zM20 96q-14-10-19 1q11 7 19-1z" fill="#BFEBD0"/></g></svg>`;
   // mood picks the face; the best streak so far unlocks keepsakes (flower 3, scarf 7, crown 30)
   function pandaSVG(mood, best) {
     const P = '#3D3350', F = '#FFFDF8', ln = `fill="none" stroke-width="3.5" stroke-linecap="round"`;
@@ -602,7 +591,7 @@ if (typeof module !== 'undefined') module.exports = Core;
       <circle cx="62" cy="91" r="7" fill="#FFC8DD" opacity=".85"/><circle cx="138" cy="91" r="7" fill="#FFC8DD" opacity=".85"/>
       ${best >= 3 ? `<g ${st} stroke-width="2"><circle cx="58" cy="24" r="6" fill="#FFC8DD"/><circle cx="70" cy="28" r="6" fill="#FFC8DD"/><circle cx="52" cy="35" r="6" fill="#FFC8DD"/><circle cx="66" cy="40" r="6" fill="#FFC8DD"/><circle cx="61" cy="32" r="5" fill="#FFF0B3"/></g>` : ''}
       ${best >= 30 ? `<path d="M80 34l3-18 9 10 8-14 8 14 9-10 3 18z" fill="#FFF0B3" ${st}/>` : ''}
-      ${mood === 'asleep' ? `<g class="zz" fill="${P}" font-family="Fredoka,sans-serif" font-weight="600"><text x="152" y="40" font-size="16">z</text><text x="166" y="24" font-size="22">z</text></g>` : ''}
+      ${mood === 'asleep' ? `<g class="zz" fill="${P}" font-family="Rubik,sans-serif" font-weight="700"><text x="152" y="40" font-size="16">z</text><text x="166" y="24" font-size="22">z</text></g>` : ''}
       <g class="hearts" fill="#F58CA8" ${st} stroke-width="1.5"><path d="M34 40c-9-7-5-14 0-9c5-5 9 2 0 9z"/><path d="M168 30c-9-7-5-14 0-9c5-5 9 2 0 9z"/><path d="M152 62c-9-7-5-14 0-9c5-5 9 2 0 9z"/></g>
     </svg>`;
   }
@@ -616,25 +605,27 @@ if (typeof module !== 'undefined') module.exports = Core;
       asleep: 'Zzz... wake me up with a snack.',
     }[p.mood];
     const chip = { new: 'Just arrived', happy: 'Fed today', hungry: 'Hungry', sad: 'Missing you', asleep: 'Napping' }[p.mood];
-    const gift = s.best < 3 ? 'a flower at a 3-day streak' : s.best < 7 ? 'a scarf at a 7-day streak' : s.best < 30 ? 'a crown at a 30-day streak' : '';
-    $('pet').innerHTML = `<div class="scene ${eating ? 'eating' : ''}">
-        <span class="boo l">${BOO}</span><span class="boo r">${BOO}</span>
-        <div class="bubble" id="bubble">${esc(line)}</div>
-        <div class="streak sticker ${popDate ? 'bounce' : ''}"><b class="num">${s.current}</b><span>day streak</span></div>
-        <button type="button" class="pandabtn" id="pandaBtn" aria-label="Pet ${esc(name)}">${pandaSVG(p.mood, s.best)}</button>
-        <span class="snack"></span>
-      </div>
-      <div class="petinfo">
-        <div class="row"><h2>${esc(name)}</h2><span class="state ${p.mood === 'happy' ? 'done' : ''}">${chip}</span></div>
-        <div class="tummy" role="img" aria-label="Tummy ${p.fullness} of 5">${'<i class="on"></i>'.repeat(p.fullness)}${'<i></i>'.repeat(5 - p.fullness)}</div>
-        <div class="muted" style="font-size:14px">Fed on ${p.fullness} of the last 5 days. Best streak ${s.best}.${gift ? ` Next gift: ${gift}.` : ''}</div>
+    const gift = s.best < 3 ? 'a flower at 3 days' : s.best < 7 ? 'a scarf at 7 days' : s.best < 30 ? 'a crown at 30 days' : '';
+    $('pet').innerHTML = `<div class="petrow">
+        <div class="pettext">
+          <div class="row"><h2>${esc(name)}</h2><span class="state ${p.mood === 'happy' ? 'done' : ''}">${chip}</span></div>
+          <p class="bubble" id="bubble">${esc(line)}</p>
+          <div class="tummy" role="img" aria-label="Fed on ${p.fullness} of the last 5 days">${'<i class="on"></i>'.repeat(p.fullness)}${'<i></i>'.repeat(5 - p.fullness)}</div>
+          <div class="muted petcap">${s.current} day streak, best ${s.best}.${gift ? ` Next gift: ${gift}.` : ''}</div>
+        </div>
+        <div class="petart ${eating ? 'eating' : ''}">
+          <button type="button" class="pandabtn" id="pandaBtn" aria-label="Pet ${esc(name)}">${pandaSVG(p.mood, s.best)}</button>
+          <span class="snack"></span>
+        </div>
       </div>`;
   }
   function renderForm(map, t) {
     const isToday = selDate === t, d = map[selDate];
     $('whenLabel').textContent = isToday ? `Today, ${niceDate(t)}` : `Logging for ${niceDate(selDate)}`;
     $('backToday').hidden = isToday;
-    $('cats').innerHTML = S.settings.cats.map(c => `<button type="button" class="sticker" style="--c:${catColor(c.id)}" data-cat="${esc(c.id)}" aria-pressed="${c.id === selCat}">${esc(c.name)}</button>`).join('');
+    // the first five categories show by default; More reveals the rest
+    const allCats = S.settings.cats, short = !moreCats && allCats.length > 6 && allCats.findIndex(c => c.id === selCat) < 5;
+    $('cats').innerHTML = (short ? `<button type="button" class="more" data-more>More</button>` : '') + (short ? allCats.slice(0, 5) : allCats).map(c => `<button type="button" class="sticker" style="--c:${catColor(c.id)}" data-cat="${esc(c.id)}" aria-pressed="${c.id === selCat}">${esc(c.name)}</button>`).join('');
     const ns = $('noSpendBtn');
     ns.textContent = d && d.noSpend ? 'No-spend day logged' : isToday ? 'No spend today' : 'No spend that day';
     ns.disabled = !ready || mode === 'stuck' || !!(d && (d.noSpend || d.count));
@@ -660,7 +651,7 @@ if (typeof module !== 'undefined') module.exports = Core;
     $('cal').innerHTML = h;
     const st = Core.monthStats(S.months, map, mk);
     const soFar = mk === t.slice(0, 7) ? +t.slice(8) : st.days;
-    $('calCap').innerHTML = `<strong class="num">${st.logged} of ${soFar}</strong> <span class="muted">days logged${mk === t.slice(0, 7) ? ' so far' : ''}. Tap a day to fill it in.</span>`;
+    $('calCap').innerHTML = `<strong class="num">${st.logged} of ${soFar}</strong> <span class="muted">days stamped${mk === t.slice(0, 7) ? ' so far' : ''}. One stamp for each day you log. Tap a day to fill it in.</span>`;
   }
   function renderBudget(t) {
     const map = Core.dayMap(S.months), st = Core.monthStats(S.months, map, viewMonth), b = S.settings.budget;
@@ -720,7 +711,7 @@ if (typeof module !== 'undefined') module.exports = Core;
   function toast(msg) { const el = $('toast'); el.textContent = msg; el.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('show'), 3200); }
 
   // ---------- events ----------
-  $('cats').addEventListener('click', e => { const b = e.target.closest('[data-cat]'); if (!b) return; selCat = b.dataset.cat; $('formMsg').textContent = ''; render(); });
+  $('cats').addEventListener('click', e => { if (e.target.closest('[data-more]')) { moreCats = true; render(); return; } const b = e.target.closest('[data-cat]'); if (!b) return; selCat = b.dataset.cat; $('formMsg').textContent = ''; render(); });
   $('addForm').addEventListener('submit', e => {
     e.preventDefault(); if (!ready) return;
     const amt = Core.parseAmount($('amount').value);
