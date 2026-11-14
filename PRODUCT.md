@@ -30,7 +30,7 @@ The habit is carried by a pet panda. Logging on the day feeds it; missing days m
 - Single static page (`index.html`), no build step, no backend, deployed on Vercel.
 - Data lives in the browser's `localStorage`: no account, no sync between devices.
 - Currency is RM only.
-- Must keep working as they do today: panda feeding, moods, tummy meter and keepsakes (flower at 3 days, scarf at 7, crown at 30); points and levels; the monthly budget; CSV export. Badges were removed at the owner's request.
+- Must keep working as they do today: panda feeding, moods, tummy meter and keepsakes (flower at 3 days, scarf at 7, crown at 30); the monthly budget; CSV export. Badges, points and levels were removed at the owner's request.
 - Categories are editable in Settings; the default set may change.
 - Undecided: multi-currency, accounts or sync, CSV import.
 

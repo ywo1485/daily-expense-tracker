@@ -141,7 +141,7 @@ header.top h1 svg{width:34px;height:34px;flex:none}
 .legend i.none{width:6px;height:6px;border:0;background:var(--muted)}
 .cap{margin-top:10px;font-size:14px}
 
-/* budget, level */
+/* budget */
 .bar{height:14px;border-radius:99px;background:var(--surface);border:2px solid var(--rule);overflow:hidden;margin:10px 0 8px}
 .bar b{display:block;height:100%;background:var(--c,var(--mint));transition:width .4s var(--out)}
 .bar.over b{background:var(--warn)}
@@ -235,7 +235,6 @@ textarea.field{min-height:160px;font:13px/1.4 ui-monospace,monospace}
       </section>
 
       <section class="panel" aria-label="Budget"><div id="budget"></div></section>
-      <section class="panel" aria-label="Level"><div id="level"></div></section>
 
     </div>
   </div>
@@ -336,18 +335,6 @@ const Core = (() => {
     return { mood, fullness, gap };
   }
 
-  function xp(map) {
-    let x = 0;
-    for (const k in map) { const d = map[k]; x += d.count * 10 + (d.noSpend ? 10 : 0) + (d.onTime ? 15 : 0); }
-    return x;
-  }
-  const TITLES = ['Starter', 'Note-taker', 'Bookkeeper', 'Ledger keeper', 'Accountant', 'Auditor', 'Treasurer', 'Comptroller'];
-  const need = L => 50 * (L - 1) * L;
-  function level(x) {
-    let L = 1; while (x >= need(L + 1)) L++;
-    return { level: L, title: TITLES[Math.min(L, TITLES.length) - 1], into: x - need(L), span: need(L + 1) - need(L) };
-  }
-
   function monthStats(months, map, mk) {
     const n = daysIn(mk); let logged = 0, total = 0;
     for (let i = 1; i <= n; i++) { const d = map[`${mk}-${pad(i)}`]; if (d && (d.count || d.noSpend)) logged++; }
@@ -368,7 +355,7 @@ const Core = (() => {
     return '﻿' + ['Date,Amount,Category,Note', ...rows].join('\r\n') + '\r\n';
   }
 
-  return { pad, dkey, parse, addDays, addMonths, daysIn, parseAmount, dayMap, streak, pet, xp, level, monthStats, budgetInfo, toCSV };
+  return { pad, dkey, parse, addDays, addMonths, daysIn, parseAmount, dayMap, streak, pet, monthStats, budgetInfo, toCSV };
 })();
 if (typeof module !== 'undefined') module.exports = Core;
 </script>
@@ -490,31 +477,32 @@ if (typeof module !== 'undefined') module.exports = Core;
 
   // ---------- actions ----------
   const uid8 = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+  // runs a change and reports the keepsake it unlocked, if the best streak just reached 3, 7 or 30
   function gains(fn) {
-    const before = Core.xp(Core.dayMap(S.months)), lv = Core.level(before).level;
-    fn();
-    const after = Core.xp(Core.dayMap(S.months)), nl = Core.level(after);
-    return { pts: after - before, up: nl.level > lv ? nl : null };
+    const best = () => Core.streak(Core.dayMap(S.months), today()).best;
+    const before = best(); fn(); const after = best();
+    const hit = [[3, 'a flower'], [7, 'a scarf'], [30, 'a crown']].find(([n]) => before < n && after >= n);
+    return { gift: hit ? hit[1] : null };
   }
   function addEntry(date, amount, cat, note) {
     const mk = date.slice(0, 7), m = month(mk);
     const g = gains(() => { m.entries.push({ id: uid8(), date, amount, cat, note, ts: Date.now() }); m.noSpend = m.noSpend.filter(n => n.date !== date); });
-    popDate = date; persist('m-' + mk); feed(date); render(); if (g.up) confetti();
-    toast(g.up ? `Level ${g.up.level}: ${g.up.title}. Logged ${money(amount)}.` : `Logged ${money(amount)} for ${catName(cat)}. +${g.pts} points`);
+    popDate = date; persist('m-' + mk); feed(date); render(); if (g.gift) confetti();
+    toast(g.gift ? `${petName()} earned ${g.gift}! Logged ${money(amount)}.` : `Logged ${money(amount)} for ${catName(cat)}.`);
   }
   function addNoSpend(date) {
     const mk = date.slice(0, 7), m = month(mk);
     if (m.noSpend.some(n => n.date === date) || m.entries.some(e => e.date === date)) return;
     const g = gains(() => m.noSpend.push({ date, ts: Date.now() }));
-    popDate = date; persist('m-' + mk); feed(date); render(); if (g.up) confetti();
-    toast(g.up ? `Level ${g.up.level}: ${g.up.title}. No-spend day logged.` : `No-spend day logged. +${g.pts} points`);
+    popDate = date; persist('m-' + mk); feed(date); render(); if (g.gift) confetti();
+    toast(g.gift ? `${petName()} earned ${g.gift}! No-spend day logged.` : 'No-spend day logged.');
   }
   function findEntry(id) { for (const mk in S.months) { const e = S.months[mk].entries.find(x => x.id === id); if (e) return { mk, e }; } return null; }
 
   // ---------- render ----------
   function render() {
     const t = today(), map = Core.dayMap(S.months);
-    renderSync(); renderPet(map, t); renderForm(map, t); renderCal(map, t); renderBudget(t); renderLevel(map, t); renderEntries();
+    renderSync(); renderPet(map, t); renderForm(map, t); renderCal(map, t); renderBudget(t); renderEntries();
     $('exportBtn').hidden = !((S.months[viewMonth] || {}).entries || []).length;
     $('exportBtn').textContent =`Export ${MONTHS[+viewMonth.slice(5) - 1]} as CSV`;
     popDate = null;
@@ -625,12 +613,6 @@ if (typeof module !== 'undefined') module.exports = Core;
       <div class="row"><span class="figure num ${over ? 'over-t' : ''}">${money(Math.abs(bi.left))}</span><span class="muted">${over ? 'over' : 'left'} of ${money(b)}</span></div>
       <div class="bar ${over ? 'over' : ''}"><b style="width:${bi.pct}%"></b></div>
       <div class="muted" style="font-size:14px">${over ? `Spent ${money(st.total)} this month.` : bi.daysLeft ? `About ${money(bi.perDay)} a day for the next ${bi.daysLeft} ${bi.daysLeft === 1 ? 'day' : 'days'}.` : `Spent ${money(st.total)} that month.`}</div>`;
-  }
-  function renderLevel(map, t) {
-    const x = Core.xp(map), lv = Core.level(x);
-    $('level').innerHTML = `<div class="row"><h2 style="margin:0">Level ${lv.level}, ${esc(lv.title)}</h2><span class="muted num" style="font-size:14px">${x} points</span></div>
-      <div class="bar"><b style="--c:#D9C8F5;width:${lv.into / lv.span * 100}%"></b></div>
-      <div class="muted" style="font-size:14px">${lv.span - lv.into} points to level ${lv.level + 1}. Each entry earns 10, each day logged on the day earns 15 more.</div>`;
   }
   function renderEntries() {
     const m = S.months[viewMonth], list = m ? m.entries : [], label = MONTHS[+viewMonth.slice(5) - 1];

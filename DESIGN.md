@@ -58,8 +58,8 @@ Numbers that line up use tabular figures.
 
 ## Motion
 
-One authored moment: logging today thumps a stamp onto today's circle while the panda eats. Easing is `cubic-bezier(.16, 1, .3, 1)`. Confetti fires only on a level-up. All motion is removed under `prefers-reduced-motion`.
+One authored moment: logging today thumps a stamp onto today's circle while the panda eats. Easing is `cubic-bezier(.16, 1, .3, 1)`. Confetti fires only when the panda earns a keepsake. All motion is removed under `prefers-reduced-motion`.
 
 ## Layout
 
-One column up to 520px wide on phones; two equal columns above 900px (log and entries on the left; stamp card, budget and level on the right). Spacing steps: 6, 8, 10, 14, 16, 24px.
+One column up to 520px wide on phones; two equal columns above 900px (log and entries on the left; stamp card and budget on the right). Spacing steps: 6, 8, 10, 14, 16, 24px.
