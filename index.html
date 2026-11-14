@@ -166,6 +166,13 @@ dialog::backdrop{background:rgba(61,51,80,.45)}
 dialog h2{font:900 22px/1.2 var(--display);margin:0 0 14px}
 dialog label{display:block;font-size:13px;font-weight:700;color:var(--muted);margin:12px 0 4px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.catlist{display:grid;gap:8px}
+.catedit{display:flex;align-items:center;gap:8px}
+.catedit i{flex:none;width:18px;height:18px;border-radius:50%}
+.catedit .field{flex:1;min-width:0}
+.catedit .icon-btn{flex:none;padding:0}
+#sAddCat{width:100%;margin-top:10px}
+.hint{font-size:13px;color:var(--muted);margin:8px 0 0}
 textarea.field{min-height:160px;font:13px/1.4 ui-monospace,monospace}
 .toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,20px);background:var(--ink);color:var(--surface);padding:12px 18px;border-radius:999px;font-weight:700;font-size:15px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s var(--out);max-width:calc(100vw - 32px);text-align:center;z-index:10}
 .toast.show{opacity:1;transform:translate(-50%,0)}
@@ -266,8 +273,10 @@ textarea.field{min-height:160px;font:13px/1.4 ui-monospace,monospace}
     <input class="field" id="sPet" maxlength="12" autocomplete="off">
     <label for="sBudget">Monthly budget (RM). Leave empty for none.</label>
     <input class="field" id="sBudget" inputmode="decimal" placeholder="1500">
-    <label>Category names</label>
-    <div class="grid2" id="sCats"></div>
+    <label>Categories</label>
+    <div class="catlist" id="sCats"></div>
+    <button type="button" class="btn ghost" id="sAddCat">Add category</button>
+    <p class="hint">Removing a category keeps its entries. They show as Other.</p>
     <div class="msg" id="sMsg" role="alert"></div>
     <div class="actions">
       <button class="btn primary" type="submit">Save settings</button>
@@ -685,7 +694,9 @@ if (typeof module !== 'undefined') module.exports = Core;
     const f = findEntry(b.dataset.entry); if (!f) return;
     editing = f.e.id; armed = false; $('eDelete').textContent = 'Delete'; $('eMsg').textContent = '';
     $('eAmount').value = (f.e.amount / 100).toFixed(2); $('eDate').value = f.e.date; $('eDate').max = today(); $('eNote').value = f.e.note || '';
-    $('eCat').innerHTML = S.settings.cats.map(c => `<option value="${esc(c.id)}" ${c.id === normCat(f.e.cat) ? 'selected' : ''}>${esc(c.name)}</option>`).join('');
+    // an entry whose category was removed keeps it as an extra choice, so saving does not silently recategorise it
+    const gone = S.settings.cats.some(c => c.id === normCat(f.e.cat)) ? '' : `<option value="${esc(f.e.cat)}" selected>${esc(catName(f.e.cat))}</option>`;
+    $('eCat').innerHTML = gone + S.settings.cats.map(c => `<option value="${esc(c.id)}" ${c.id === normCat(f.e.cat) ? 'selected' : ''}>${esc(c.name)}</option>`).join('');
     $('editDlg').showModal();
   });
   $('editForm').addEventListener('submit', e => {
@@ -709,16 +720,42 @@ if (typeof module !== 'undefined') module.exports = Core;
   // settings
   function openSettings() {
     $('sPet').value = petName(); $('sBudget').value = S.settings.budget ? (S.settings.budget / 100).toFixed(2) : ''; $('sMsg').textContent = '';
-    $('sCats').innerHTML = S.settings.cats.map((c, i) => `<input class="field" id="sCat${i}" maxlength="16" value="${esc(c.name)}" aria-label="Category ${i + 1} name">`).join('');
+    draftCats = S.settings.cats.map(c => ({ id: c.id, name: c.name, was: c.name }));
+    renderCatRows();
     $('setDlg').showModal();
   }
+  // categories are edited on a draft copy; nothing changes until Save settings
+  const MAX_CATS = 16;
+  let draftCats = [];
+  function readCatRows() { $('sCats').querySelectorAll('input').forEach((el, i) => { if (draftCats[i]) draftCats[i].name = el.value; }); }
+  function renderCatRows() {
+    $('sCats').innerHTML = draftCats.map((c, i) => `<div class="catedit"><i style="background:${PASTELS[i % PASTELS.length]}"></i>
+      <input class="field" maxlength="16" value="${esc(c.name)}" placeholder="Category name" aria-label="Category ${i + 1} name">
+      <button type="button" class="icon-btn" data-remove="${i}" aria-label="Remove ${esc(c.name || 'this category')}" ${draftCats.length < 2 ? 'disabled' : ''}><svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg></button></div>`).join('');
+    $('sAddCat').disabled = draftCats.length >= MAX_CATS;
+    $('sAddCat').textContent = draftCats.length >= MAX_CATS ? `Up to ${MAX_CATS} categories` : 'Add category';
+  }
+  $('sCats').addEventListener('click', e => {
+    const b = e.target.closest('[data-remove]'); if (!b || draftCats.length < 2) return;
+    readCatRows(); draftCats.splice(+b.dataset.remove, 1); renderCatRows();
+  });
+  $('sAddCat').addEventListener('click', () => {
+    if (draftCats.length >= MAX_CATS) return;
+    readCatRows(); draftCats.push({ id: 'u' + uid8(), name: '', was: '' }); renderCatRows();
+    const inputs = $('sCats').querySelectorAll('input'); inputs[inputs.length - 1].focus();
+  });
   $('openSettings').addEventListener('click', openSettings);
   $('budget').addEventListener('click', e => { if (e.target.closest('[data-open-settings]')) openSettings(); });
   $('setForm').addEventListener('submit', e => {
     e.preventDefault(); if (!ready) return;
     const raw = $('sBudget').value.trim(), b = raw ? Core.parseAmount(raw) : 0;
     if (raw && !b) { $('sMsg').textContent = 'Enter the budget as a number, like 1500.'; return; }
-    S.settings = { budget: b, catsV: 2, petName: $('sPet').value.trim().slice(0, 12), cats: S.settings.cats.map((c, i) => ({ id: c.id, name: $('sCat' + i).value.trim() || c.name })) };
+    readCatRows();
+    // a cleared name keeps the old one; a new row left blank is dropped
+    const cats = draftCats.map(c => ({ id: c.id, name: c.name.trim().slice(0, 16) || c.was })).filter(c => c.name);
+    if (!cats.length) { $('sMsg').textContent = 'Keep at least one category.'; return; }
+    S.settings = { budget: b, catsV: 2, petName: $('sPet').value.trim().slice(0, 12), cats };
+    if (!cats.some(c => c.id === selCat)) selCat = null;
     persist('settings'); $('setDlg').close(); render(); toast('Saved settings');
   });
   $('sCancel').addEventListener('click', () => $('setDlg').close());

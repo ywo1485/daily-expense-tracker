@@ -31,7 +31,7 @@ The habit is carried by a pet panda. Logging on the day feeds it; missing days m
 - Data lives in the browser's `localStorage`: no account, no sync between devices.
 - Currency is RM only.
 - Must keep working as they do today: panda feeding, moods, tummy meter and keepsakes (flower at 3 days, scarf at 7, crown at 30); the monthly budget; CSV export. Badges, points and levels were removed at the owner's request.
-- Categories are editable in Settings; the default set may change.
+- Categories can be added, renamed and removed in Settings (1 to 16). Entries of a removed category are kept and shown as Other.
 - Undecided: multi-currency, accounts or sync, CSV import.
 
 ## Brand Commitments
