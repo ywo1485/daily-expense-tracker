@@ -1,6 +1,6 @@
 # Daily Spend
 
-A daily expense tracker with a pet panda you feed by logging every day, plus a monthly calendar, a budget, badges and CSV export.
+A daily expense tracker with a pet panda you feed by logging every day, plus a monthly calendar, a budget, levels and CSV export.
 
 It is a single static page: everything lives in `index.html`, with no build step and no dependencies.
 

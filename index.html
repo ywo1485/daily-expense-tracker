@@ -4,8 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Track what you spend each day and keep a pet panda fed. Free, no account, and your entries stay in your browser.">
-<meta name="theme-color" content="#FBF3F7" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#211B2A" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#FBF3F7">
 <title>Daily Spend</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='9' cy='10' r='7' fill='%233D3350'/%3E%3Ccircle cx='31' cy='10' r='7' fill='%233D3350'/%3E%3Ccircle cx='20' cy='22' r='16' fill='%23FFFDF8' stroke='%233D3350' stroke-width='2.5'/%3E%3Cellipse cx='13.5' cy='21' rx='4' ry='5' fill='%233D3350'/%3E%3Cellipse cx='26.5' cy='21' rx='4' ry='5' fill='%233D3350'/%3E%3Cellipse cx='20' cy='27.5' rx='2.4' ry='1.7' fill='%233D3350'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,19 +17,8 @@
   --accent:#CDB7F6; --accent-deep:#8E6FD0; --mint:#BFEBD0; --warn:#B8405F; --on-pastel:#3D3350;
   --display:"Rubik",system-ui,-apple-system,"Segoe UI",sans-serif;
   --r:14px;
+  color-scheme:light;
   --out:cubic-bezier(.16,1,.3,1);
-}
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    --bg:#211B2A; --surface:#2B2437; --ink:#F3ECF8; --muted:#B0A5BF; --line:#43394F; --rule:#9A8FAE;
-    --accent-deep:#B79CF0; --warn:#FF9DB5;
-    color-scheme:dark;
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#211B2A; --surface:#2B2437; --ink:#F3ECF8; --muted:#B0A5BF; --line:#43394F; --rule:#9A8FAE;
-  --accent-deep:#B79CF0; --warn:#FF9DB5;
-  color-scheme:dark;
 }
 *{box-sizing:border-box}
 html,body{margin:0}
@@ -79,7 +67,7 @@ header.top h1 svg{width:34px;height:34px;flex:none}
 .bubble{margin:6px 0 10px;font-weight:700;font-size:15px;line-height:1.3}
 .tummy{display:flex;gap:6px;margin-bottom:6px}
 .tummy i{width:18px;height:18px;border-radius:50%;border:1.5px dashed var(--muted)}
-.tummy i.on{background:var(--mint);border:1.5px solid var(--rule)}
+.tummy i.on{background:var(--mint);border:1.5px solid var(--mint)}
 .petcap{font-size:13px}
 .petart{position:relative;flex:none;width:118px;height:106px}
 .petart::before{content:"";position:absolute;inset:4px 8px 0;border-radius:50%;background:#D9F1DF}
@@ -118,11 +106,8 @@ header.top h1 svg{width:34px;height:34px;flex:none}
 .amount input::placeholder{color:color-mix(in srgb,var(--muted) 80%,var(--surface));opacity:1}
 .cats{display:flex;flex-wrap:wrap;gap:7px;margin:14px 0}
 .cats button{display:inline-flex;align-items:center;gap:7px;min-height:44px;padding:0 13px;border-radius:999px;border:2px solid var(--rule);background:var(--surface);color:var(--ink);font-weight:700;font-size:14px;transition:transform .2s var(--out),background-color .15s}
-.cats button::before{content:"";width:11px;height:11px;border-radius:50%;background:var(--c);border:1.5px solid var(--rule)}
-.cats button[aria-pressed="true"]{background:var(--c);color:var(--on-pastel);transform:rotate(-3deg)}
-.cats button[aria-pressed="true"]::before{background:var(--on-pastel);border-color:var(--on-pastel)}
+.cats button[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:var(--on-pastel);transform:rotate(-3deg)}
 .cats .more{order:1;border-style:dashed}
-.cats .more::before{display:none}
 .field{width:100%;border:2px solid var(--rule);background:var(--surface);border-radius:12px;padding:11px 14px}
 .field::placeholder{color:var(--muted);opacity:1}
 .actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
@@ -139,34 +124,29 @@ header.top h1 svg{width:34px;height:34px;flex:none}
 .monthnav strong{font:900 20px/1 var(--display)}
 .cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
 .cal .wd{font-size:12px;font-weight:700;color:var(--muted);text-align:center}
-.day{position:relative;aspect-ratio:1;border-radius:50%;border:2px dashed var(--muted);background:none;display:grid;place-items:center;padding:0;font:700 14px/1 var(--display);font-variant-numeric:tabular-nums;color:var(--muted)}
-.day.future{border-style:solid;opacity:.28;cursor:default}
+.day{position:relative;aspect-ratio:1;border-radius:50%;border:2px dashed color-mix(in srgb,var(--rule) 50%,transparent);background:none;display:grid;place-items:center;padding:0;font:700 14px/1 var(--display);font-variant-numeric:tabular-nums;color:var(--muted)}
+.day.future{border:2px solid var(--rule);color:var(--ink);opacity:.28;cursor:default}
 .day.back{border-color:var(--rule);background:color-mix(in srgb,var(--c) 45%,transparent);color:var(--ink)}
-.day.on{border:2px solid var(--rule);background:var(--c);color:var(--on-pastel);transform:rotate(var(--rot,0deg));box-shadow:inset 0 0 0 2.5px var(--c),inset 0 0 0 4px color-mix(in srgb,var(--on-pastel) 45%,transparent)}
+.day.on{border:2px solid var(--c);background:var(--c);color:var(--on-pastel);transform:rotate(var(--rot,0deg))}
 .day.zero::after{content:"";position:absolute;bottom:4px;width:4px;height:4px;border-radius:50%;background:currentColor}
-.day.today:not(.on){border:3px solid var(--accent-deep);color:var(--ink)}
-.day.sel{outline:3px solid var(--ink);outline-offset:2px}
+.day.today:not(.on){border:3px solid var(--accent);color:var(--ink)}
+.day.sel:not(.today){outline:3px solid var(--ink);outline-offset:2px}
 .day.pop{animation:thump .55s var(--out)}
 @keyframes thump{0%{transform:scale(2.3) rotate(-24deg);opacity:0}55%{transform:scale(.9) rotate(var(--rot,0deg));opacity:1}100%{transform:scale(1) rotate(var(--rot,0deg))}}
 .legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;font-weight:700;color:var(--muted);margin-top:14px}
 .legend span{display:flex;align-items:center;gap:5px}
 .legend i{width:13px;height:13px;border-radius:50%;border:1.5px solid var(--rule)}
-.legend i.on{background:#FFC8DD}
+.legend i.on{background:#FFC8DD;border-color:#FFC8DD}
 .legend i.late{border-style:dashed;background:color-mix(in srgb,#FFC8DD 45%,transparent)}
 .legend i.none{width:6px;height:6px;border:0;background:var(--muted)}
 .cap{margin-top:10px;font-size:14px}
 
-/* budget, level, badges */
+/* budget, level */
 .bar{height:14px;border-radius:99px;background:var(--surface);border:2px solid var(--rule);overflow:hidden;margin:10px 0 8px}
 .bar b{display:block;height:100%;background:var(--c,var(--mint));transition:width .4s var(--out)}
 .bar.over b{background:var(--warn)}
 .figure{font:900 34px/1.1 var(--display);letter-spacing:-.02em}
 .over-t{color:var(--warn)}
-.badges{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px 8px;margin-top:18px}
-.badge{display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center;font-size:12px;font-weight:700;color:var(--muted)}
-.badge .seal{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;border:2px dashed var(--muted);font:900 16px/1 var(--display)}
-.badge.got{color:var(--ink)}
-.badge.got .seal{border:2px solid var(--rule);background:var(--c);color:var(--on-pastel);transform:rotate(var(--rot));box-shadow:inset 0 0 0 2.5px var(--c),inset 0 0 0 4px color-mix(in srgb,var(--on-pastel) 45%,transparent)}
 
 /* entries */
 .daygroup{border-top:2px dashed var(--line);padding-top:10px;margin-top:10px}
@@ -255,7 +235,7 @@ textarea.field{min-height:160px;font:13px/1.4 ui-monospace,monospace}
       </section>
 
       <section class="panel" aria-label="Budget"><div id="budget"></div></section>
-      <section class="panel" aria-label="Level and badges"><div id="level"></div></section>
+      <section class="panel" aria-label="Level"><div id="level"></div></section>
 
     </div>
   </div>
@@ -375,27 +355,6 @@ const Core = (() => {
     return { days: n, logged, total, count: ((months[mk] || {}).entries || []).length };
   }
 
-  function badges(months, map, budget, today) {
-    const s = streak(map, today);
-    let entries = 0, zero = 0, full = false, under = false;
-    for (const k in map) { entries += map[k].count; if (map[k].noSpend) zero++; }
-    for (const mk in months) {
-      const st = monthStats(months, map, mk);
-      if (st.logged === st.days) full = true;
-      if (budget > 0 && mk < today.slice(0, 7) && st.logged > 0 && st.total <= budget) under = true;
-    }
-    return [
-      { mark: '1', name: 'First entry', got: entries >= 1 },
-      { mark: '3', name: '3-day streak', got: s.best >= 3 },
-      { mark: '7', name: '7-day streak', got: s.best >= 7 },
-      { mark: '30', name: '30-day streak', got: s.best >= 30 },
-      { mark: '50', name: '50 entries', got: entries >= 50 },
-      { mark: '0', name: '5 no-spend days', got: zero >= 5 },
-      { mark: 'M', name: 'Full month logged', got: full },
-      { mark: 'B', name: 'Month under budget', got: under },
-    ];
-  }
-
   function budgetInfo(budget, spent, mk, today) {
     const left = budget - spent; let daysLeft = 0;
     if (mk === today.slice(0, 7)) daysLeft = daysIn(mk) - Number(today.slice(8)) + 1;
@@ -409,7 +368,7 @@ const Core = (() => {
     return '﻿' + ['Date,Amount,Category,Note', ...rows].join('\r\n') + '\r\n';
   }
 
-  return { pad, dkey, parse, addDays, addMonths, daysIn, parseAmount, dayMap, streak, pet, xp, level, monthStats, badges, budgetInfo, toCSV };
+  return { pad, dkey, parse, addDays, addMonths, daysIn, parseAmount, dayMap, streak, pet, xp, level, monthStats, budgetInfo, toCSV };
 })();
 if (typeof module !== 'undefined') module.exports = Core;
 </script>
@@ -668,11 +627,10 @@ if (typeof module !== 'undefined') module.exports = Core;
       <div class="muted" style="font-size:14px">${over ? `Spent ${money(st.total)} this month.` : bi.daysLeft ? `About ${money(bi.perDay)} a day for the next ${bi.daysLeft} ${bi.daysLeft === 1 ? 'day' : 'days'}.` : `Spent ${money(st.total)} that month.`}</div>`;
   }
   function renderLevel(map, t) {
-    const x = Core.xp(map), lv = Core.level(x), bs = Core.badges(S.months, map, S.settings.budget, t);
+    const x = Core.xp(map), lv = Core.level(x);
     $('level').innerHTML = `<div class="row"><h2 style="margin:0">Level ${lv.level}, ${esc(lv.title)}</h2><span class="muted num" style="font-size:14px">${x} points</span></div>
       <div class="bar"><b style="--c:#D9C8F5;width:${lv.into / lv.span * 100}%"></b></div>
-      <div class="muted" style="font-size:14px">${lv.span - lv.into} points to level ${lv.level + 1}. Each entry earns 10, each day logged on the day earns 15 more.</div>
-      <div class="badges">${bs.map((b, i) => `<div class="badge ${b.got ? 'got' : ''}" style="--c:${PASTELS[(i + 1) % 10]};--rot:${rotOf(i + 2)}deg"><span class="seal">${b.mark}</span><span>${esc(b.name)}${b.got ? '' : '<br>not yet'}</span></div>`).join('')}</div>`;
+      <div class="muted" style="font-size:14px">${lv.span - lv.into} points to level ${lv.level + 1}. Each entry earns 10, each day logged on the day earns 15 more.</div>`;
   }
   function renderEntries() {
     const m = S.months[viewMonth], list = m ? m.entries : [], label = MONTHS[+viewMonth.slice(5) - 1];

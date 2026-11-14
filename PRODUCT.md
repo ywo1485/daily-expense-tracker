@@ -30,14 +30,14 @@ The habit is carried by a pet panda. Logging on the day feeds it; missing days m
 - Single static page (`index.html`), no build step, no backend, deployed on Vercel.
 - Data lives in the browser's `localStorage`: no account, no sync between devices.
 - Currency is RM only.
-- Must keep working as they do today: panda feeding, moods, tummy meter and keepsakes (flower at 3 days, scarf at 7, crown at 30); points, levels and the eight badges; the monthly budget; CSV export.
+- Must keep working as they do today: panda feeding, moods, tummy meter and keepsakes (flower at 3 days, scarf at 7, crown at 30); points and levels; the monthly budget; CSV export. Badges were removed at the owner's request.
 - Categories are editable in Settings; the default set may change.
 - Undecided: multi-currency, accounts or sync, CSV import.
 
 ## Brand Commitments
 
 - Name: Daily Spend. The panda's default name is Mochi and the user can rename it.
-- The pastel "sticker sheet" look is kept: dotted backing, white rounded panels, pastel stickers with a white edge, Fredoka for display and Nunito for text.
+- The look is a pastel loyalty stamp card, recorded in DESIGN.md. It is always light: there is no dark theme.
 - Voice: warm, short, plain. The panda speaks in first person.
 
 ## Evidence on Hand
